@@ -12,14 +12,14 @@ module S3Gzip
       @secret_access_key = secret_access_key
       @bucket = bucket
       @filename = filename
-      
+
       s3 = AWS::S3.new(
         :access_key_id => access_key_id,
         :secret_access_key => secret_access_key
       )
       bucket = s3.buckets[bucket]
       s3_object = bucket.objects[filename]
-      @io = S3io.open(s3_object, 'w') 
+      @io = S3io.open(s3_object, 'w')
       @gzip_writer = Zlib::GzipWriter.new(@io)
     end
 
@@ -43,7 +43,7 @@ module S3Gzip
       return writer unless block_given?
       yield writer
     ensure
-      writer.close if block_given?
+      writer.close if writer && block_given?
     end
 
     def self.write(access_key_id, secret_access_key, bucket, filename, value)
